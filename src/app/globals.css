@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://unicons.iconscout.com/release/v4.0.0/css/unicons.css");
+
+html,
+body,
+* {
+  @apply text-custom-white;
+}

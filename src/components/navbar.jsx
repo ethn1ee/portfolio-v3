@@ -5,12 +5,12 @@ import Link from "next/link";
 import { useState } from "react";
 import NavLink from "./navLink";
 import { motion } from "framer-motion";
+import * as Unicons from "@iconscout/react-unicons";
 
 const links = [
   { url: "/", title: "home" },
   { url: "/about", title: "about" },
   { url: "/portfolio", title: "portfolio" },
-  { url: "/doodles", title: "doodles" },
   { url: "/contact", title: "contact" },
 ];
 
@@ -23,7 +23,6 @@ const Navbar = () => {
     },
     opened: {
       rotate: 45,
-      backgroundColor: "rgb(255,255,255)",
     },
   };
 
@@ -42,7 +41,6 @@ const Navbar = () => {
     },
     opened: {
       rotate: -45,
-      backgroundColor: "rgb(255,255,255)",
     },
   };
 
@@ -72,35 +70,36 @@ const Navbar = () => {
 
   return (
     <div className="h-full flex items-center justify-between px-4 sm:px-8 md:px-12 lg:px-20 xl:px-48 text-xl">
+      {/* LOGO */}
+      <div className="md:hidden lg:flex xl:w-1/2">
+        <Link
+          href="/"
+          className="text-sm bg-black rounded-md p-1 font-semibold flex items-center justify-center"
+        >
+          Ethan Lee
+        </Link>
+      </div>
+
       {/* LINKS */}
-      <div className="hidden md:flex gap-4 w-1/3">
+      <div className="hidden md:flex gap-8 lg:w-1/2 justify-end">
         {links.map((link) => (
           <NavLink link={link} key={link.url} />
         ))}
       </div>
 
-      {/* LOGO */}
-      <div className="md:hidden lg:flex xl:w-1/3 xl:justify-center">
-        <Link
-          href="/"
-          className="text-sm bg-black rounded-md p-1 font-semibold flex items-center justify-center"
-        >
-          <span className="text-white mr-1">Lama</span>
-          <span className="w-12 h-8 rounded bg-white text-black flex items-center justify-center">
-            .dev
-          </span>
-        </Link>
-      </div>
-
       {/* SOCIAL */}
-      <div className="hidden md:flex gap-4 w-1/3 justify-end">
-        <Link href="https://github.com/ethn1ee">
-          <Image src="/github.png" alt="github" width={24} height={24} />
-        </Link>
-        <Link href="https://linkedin.com/in/ethn1ee/">
-          <Image src="/linkedin.png" alt="linkedin" width={24} height={24} />
-        </Link>
-      </div>
+      {/* <div className="hidden md:flex gap-4 w-1/3 justify-end">
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+          <Link href="https://github.com/ethn1ee">
+            <Unicons.UilGithub size="24" />
+          </Link>
+        </motion.div>
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+          <Link href="https://linkedin.com/in/ethn1ee/">
+            <Unicons.UilLinkedin size="24" />
+          </Link>
+        </motion.div>
+      </div> */}
 
       {/* RESPONSIVE MENU */}
       <div className="md:hidden">
@@ -112,17 +111,17 @@ const Navbar = () => {
           <motion.div
             variants={topVariants}
             animate={open ? "opened" : "closed"}
-            className="w-10 h-1 bg-black rounded origin-left"
+            className="w-10 h-1 bg-white rounded origin-left"
           ></motion.div>
           <motion.div
             variants={centerVariants}
             animate={open ? "opened" : "closed"}
-            className="w-10 h-1 bg-black rounded"
+            className="w-10 h-1 bg-white rounded"
           ></motion.div>
           <motion.div
             variants={bottomVariants}
             animate={open ? "opened" : "closed"}
-            className="w-10 h-1 bg-black rounded origin-left"
+            className="w-10 h-1 bg-white rounded origin-left"
           ></motion.div>
         </button>
 
@@ -132,11 +131,17 @@ const Navbar = () => {
             variants={listVariants}
             initial="closed"
             animate="opened"
-            className="absolute top-0 left-0 w-screen h-screen bg-black text-white flex flex-col items-center justify-center gap-8 text-4xl z-40"
+            className="absolute top-0 left-0 w-screen h-screen bg-black flex flex-col items-center justify-center gap-8 text-4xl z-40"
           >
             {links.map((link) => (
-              <motion.div variants={listItemVariants} key={link.url}>
-                <Link href={link.url}>{link.title}</Link>
+              <motion.div
+                variants={listItemVariants}
+                key={link.url}
+                className="bg-transparent"
+              >
+                <Link href={link.url} className="bg-transparent">
+                  {link.title}
+                </Link>
               </motion.div>
             ))}
           </motion.div>

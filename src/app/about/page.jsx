@@ -2,44 +2,9 @@
 import { motion, useInView, useScroll } from "framer-motion";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import Brain from "@/components/brain";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const AboutPage = () => {
-  const skills = [
-    "JavaScript",
-    "TypeScript",
-    "Python",
-    "Java",
-    "C/C++",
-    "C#",
-    "React",
-    "Angular",
-    "Next.js",
-    "Node.js",
-    "Tailwind CSS",
-  ];
-
-  const experiences = [
-    {
-      title: "title",
-      company: "company",
-      description: "description",
-      date: "2024 - Present",
-    },
-    {
-      title: "title",
-      company: "company",
-      description: "description",
-      date: "2024 - Present",
-    },
-    {
-      title: "title",
-      company: "company",
-      description: "description",
-      date: "2024 - Present",
-    },
-  ];
-
   const containerRef = useRef();
 
   const { scrollYProgress } = useScroll({ container: containerRef });
@@ -52,6 +17,25 @@ const AboutPage = () => {
   const isExperienceRefInView = useInView(experienceRef, {
     once: true,
   });
+
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("./about.json");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const jsonData = await response.json();
+        setData(jsonData);
+      } catch (error) {
+        console.error("Failed to fetch or parse the data:", error);
+      }
+    };
+
+    fetchData();
+  }, [data]);
 
   return (
     <motion.div
@@ -68,25 +52,7 @@ const AboutPage = () => {
           <div className="flex flex-col gap-12 justify-center">
             {/* BIOGRAPHY TITLE */}
             <h1 className="font-bold text-2xl">BIOGRAPHY</h1>
-            <p className="text-lg">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Similique, maxime expedita? Porro amet beatae voluptate, alias
-              laborum deleniti inventore, accusantium numquam veritatis placeat
-              vero suscipit? Ducimus illum aliquam iste voluptatibus!
-            </p>
-            {/* BIOGRAPHY QUOTE */}
-            <span className="italic">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            </span>
-            {/* BIOGRAPHY SIGN */}
-            <div className="self-end">Signature</div>
-            {/* BIOGRAPHY SCROLL SVG */}
-            <DotLottieReact
-              className="w-10 h-10"
-              src="/scroll-down.json"
-              loop
-              autoplay
-            />
+            {data && <p className="text-lg font-extralight">{data.biography}</p>}
           </div>
           {/* SKILLS CONTAINER */}
           <div className="flex flex-col gap-12 justify-center" ref={skillsRef}>
@@ -106,26 +72,24 @@ const AboutPage = () => {
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="flex gap-4 flex-wrap"
             >
-              {skills.map((skill) => (
-                <div
-                  key={skill}
-                  className="rounded p-2 text-sm cursor-pointer bg-black text-white hover:bg-white hover:text-black "
-                >
-                  {skill}
-                </div>
-              ))}
+              {data &&
+                data.skills.map((skill) => (
+                  <motion.div
+                    whileHover={{
+                      backgroundColor: "#495057",
+                      color: "#F8F9FA",
+                    }}
+                    key={skill}
+                    className="rounded p-2 text-sm select-none bg-dark-1 text-light-1"
+                  >
+                    {skill}
+                  </motion.div>
+                ))}
             </motion.div>
-            {/* SKILL SCROLL SVG */}
-            <DotLottieReact
-              className="w-10 h-10"
-              src="/scroll-down.json"
-              loop
-              autoplay
-            />
           </div>
           {/* EXPERIENCE CONTAINER */}
           <div
-            className="flex flex-col gap-12 justify-center pb-48"
+            className="flex flex-col gap-12 justify-center pb-48 select-none"
             ref={experienceRef}
           >
             {/* EXPERIENCE TITLE */}
@@ -143,9 +107,10 @@ const AboutPage = () => {
               animate={isExperienceRefInView ? { x: 0 } : {}}
               transition={{ duration: 0.5, ease: "easeOut" }}
             >
-              {experiences.map((experience, i) => (
-                <ExperienceCard experience={experience} index={i} key={i} />
-              ))}
+              {data &&
+                data.experiences.map((experience, i) => (
+                  <ExperienceCard experience={experience} index={i} key={i} />
+                ))}
             </motion.div>
           </div>
         </div>
@@ -159,60 +124,79 @@ const AboutPage = () => {
 };
 
 const ExperienceCard = ({ experience, index }) => {
+  const [activeIdx, setActiveIdx] = useState(-1);
+
   return (
-    <div className="flex justify-between h-48">
+    <div className="flex justify-between h-auto">
       {/* LEFT */}
-      <div className="w-1/3">
+      <motion.div
+        initial={{ backgroundColor: "#212529" }}
+        whileHover={index % 2 === 0 && { backgroundColor: "#343A40" }}
+        onMouseEnter={index % 2 === 0 ? () => setActiveIdx(index) : () => {}}
+        onMouseLeave={index % 2 === 0 ? () => setActiveIdx(-1) : () => {}}
+        className="w-5/12 rounded-xl p-4"
+      >
         {index % 2 === 0 && (
           <>
-            {/* TITLE */}
-            <div className="bg-white p-3 font-semibold rounded-b-lg rounded-s-lg">
-              {experience.title}
-            </div>
-            {/* DESCRIPTION */}
-            <div className="p-3 text-sm italic">{experience.description}</div>
             {/* DATE */}
-            <div className="p-3 text-red-400 text-sm font-semibold">
+            <div className="text-light-4 text-xs font-semibold">
               {experience.date}
             </div>
+            {/* TITLE */}
+            <div className="text-custom-white border-l-4 border-custom-white pl-4 mt-4 font-semibold">
+              {experience.title}
+            </div>
             {/* COMPANY */}
-            <div className="p-1 rounded bg-white text-sm font-semibold w-fit">
+            <div className="mt-2 rounded text-xs text-light-3">
               {experience.company}
             </div>
           </>
         )}
-      </div>
+      </motion.div>
 
       {/* CENTER */}
       <div className="w-1/6 flex justify-center">
         {/* LINE */}
-        <div className="w-1 h-full bg-gray-600 rounded relative">
+        <div
+          className={`w-1 h-full ${
+            index === activeIdx ? "bg-dark-2" : "bg-dark-1"
+          } rounded relative transition-all duration-[0.3s]`}
+        >
           {/* LINE CIRCLE */}
-          <div className="absolute w-5 h-5 rounded-full ring-4 ring-4ed-400 bg-white -left-2"></div>
+          <div
+            className={`absolute w-4 h-4 rounded-full ${
+              index === activeIdx ? "bg-light-4" : "bg-dark-2"
+            } -left-[6px] transition-all duration-[0.3s]`}
+          ></div>
         </div>
       </div>
 
       {/* RIGHT */}
-      <div className="w-1/3">
+      <motion.div
+        initial={{ backgroundColor: "#212529" }}
+        whileHover={index % 2 === 1 && { backgroundColor: "#343A40" }}
+        onMouseEnter={index % 2 === 1 ? () => setActiveIdx(index) : () => {}}
+        onMouseLeave={index % 2 === 1 ? () => setActiveIdx(-1) : () => {}}
+        transition={{ duration: 0.3 }}
+        className="w-5/12 rounded-xl p-4"
+      >
         {index % 2 === 1 && (
           <>
-            {/* TITLE */}
-            <div className="bg-white p-3 font-semibold rounded-b-lg rounded-e-lg">
-              {experience.title}
-            </div>
-            {/* DESCRIPTION */}
-            <div className="p-3 text-sm italic">{experience.description}</div>
             {/* DATE */}
-            <div className="p-3 text-red-400 text-sm font-semibold">
+            <div className="text-light-4 text-xs font-semibold">
               {experience.date}
             </div>
+            {/* TITLE */}
+            <div className="text-custom-white border-l-4 border-custom-white pl-4 mt-4 font-semibold">
+              {experience.title}
+            </div>
             {/* COMPANY */}
-            <div className="p-1 rounded bg-white text-sm font-semibold w-fit">
+            <div className="mt-2 rounded text-xs text-light-3">
               {experience.company}
             </div>
           </>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

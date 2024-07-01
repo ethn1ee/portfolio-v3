@@ -44,7 +44,7 @@ const ContactPage = () => {
       animate={{ y: "0%" }}
       transition={{ duration: 1 }}
     >
-      <div className="h-full flex flex-col lg:flex-row px-4 sm:px-12 lg:px-20 xl:px-48">
+      <div className="h-full flex flex-col items-center lg:flex-row px-4 sm:px-12 lg:px-20 xl:px-48">
         {/* TEXT CONTAINER */}
         <div className="h-1/2 lg:h-full lg:w-1/2 flex items-center justify-center text-6xl">
           <div>
@@ -65,22 +65,23 @@ const ContactPage = () => {
         <form
           onSubmit={sendEmail}
           ref={form}
-          className="h-1/2 lg:h-full lg:w-1/2 bg-red-50 rounded-xl text-xl flex flex-col gap-8 justify-center p-24"
+          className="h-1/2 lg:h-2/3 lg:w-1/2 bg-hover rounded-xl text-xl flex flex-col gap-8 justify-center p-24"
         >
           <span>Dear Ethan,</span>
-          <textarea
+          <motion.textarea
+            whileFocus={{ borderColor: "#ADB5BD" }} // light-4
             rows={6}
-            className="bg-transparent border-b-2 border-b-black outline-none resize-none"
+            className="bg-transparent border-b-2 pb-2 border-dark-2 outline-none resize-none font-thin"
             name="user_message"
           />
           <span>My mail address is: </span>
-          <input
+          <motion.input
+            whileFocus={{ borderColor: "#ADB5BD" }} // light-4
             type="text"
-            className="bg-transparent border-b-2 border-b-black outline-none"
+            className="bg-transparent border-b-2 pb-2 border-dark-2 outline-none font-thin"
             name="user_email"
           />
-          <span>Regards</span>
-          <button className="bg-purple-200 rounded font-semibold text-gray-600 p-4">
+          <button className="bg-light-1 rounded font-semibold text-black p-4">
             Send
           </button>
           {success && (

@@ -1,9 +1,11 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Carousel from "./carousel";
+import "./carousel.scss";
 
 const PortfolioPage = () => {
   const ref = useRef();
@@ -11,30 +13,24 @@ const PortfolioPage = () => {
   const { scrollYProgress } = useScroll({ target: ref });
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
 
-  const works = [
-    {
-      color: "from-blue-300 to-violet-300",
-      title: "title1",
-      description: "lorem ipsum",
-      img: "/Miami.jpg",
-      link: "https://www.youtube.com/watch?v=DJaZUFK8Kv4&t=3399s&ab_channel=LamaDev",
-    },
-    {
-      color: "from-blue-300 to-violet-300",
-      title: "title2",
-      description: "lorem ipsum",
-      img: "/Miami.jpg",
-      link: "https://www.youtube.com/watch?v=DJaZUFK8Kv4&t=3399s&ab_channel=LamaDev",
-    },
-    {
-      id: 0,
-      color: "from-blue-300 to-violet-300",
-      title: "title3",
-      description: "lorem ipsum",
-      img: "/Miami.jpg",
-      link: "https://www.youtube.com/watch?v=DJaZUFK8Kv4&t=3399s&ab_channel=LamaDev",
-    },
-  ];
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("./portfolio.json");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const jsonData = await response.json();
+        setData(jsonData);
+      } catch (error) {
+        console.error("Failed to fetch or parse the data:", error);
+      }
+    };
+
+    fetchData();
+  }, [data]);
 
   return (
     <motion.div
@@ -47,36 +43,42 @@ const PortfolioPage = () => {
         <div className="w-screen h-[calc(100vh-6rem)] flex items-center justify-center text-8xl text-center">
           My Works
         </div>
-        <div className="sticky top-0 flex h-screen gap-4 items-center overflow-hidden">
+        <div className="sticky top-0 flex h-screen gap-4 items-center overflow-hidden bg-custom-bg">
           <motion.div style={{ x }} className="flex">
-            <div className="h-screen w-screen flex items-center justify-center bg-gradient-to-r from-violet-50 to-red-50" />
-            {works.map((item, i) => (
-              <div
-                className={`h-screen w-screen flex items-center justify-center bg-gradient-to-r ${item.color}`}
-                key={i}
-              >
-                <div className="flex flex-col gap-8 text-white">
-                  <h1 className="text-xl font-bold md:text-4xl lg:text-6xl xl:text-8xl">
-                    {item.title}
-                  </h1>
-                  <div className="relative w-80 h-56 md:w-96 md:h-64 lg:w-[500px] lg:h-[350px] xl:w-[600px] xl:h-[420px]">
-                    <Image src={item.img} alt="" fill className="object-cover" />
+            <div className="h-screen w-screen flex items-center justify-center" />
+            {data &&
+              data.works.map((item, i) => (
+                <div
+                  className={`h-screen w-screen flex items-center justify-center bg-gradient-to-r ${item.color}`}
+                  key={i}
+                >
+                  <div className="flex flex-col gap-8 text-white">
+                    <h1 className="text-xl font-bold md:text-4xl lg:text-6xl xl:text-8xl">
+                      {item.title}
+                    </h1>
+                    <div className="relative w-80 h-56 md:w-96 md:h-64 lg:w-[500px] lg:h-[350px] xl:w-[600px] xl:h-[420px]">
+                      <Image
+                        src={item.img}
+                        alt=""
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <p className="w-80 md:96 lg:w-[500px] lg:text-lg xl:2-[600px]">
+                      {item.description}
+                    </p>
+                    <Link href={item.link} className="flex justify-end">
+                      <button className="p-2 text-sm md:p-4 md:text-md lg:p-8 lg:text-lg bg-white text-gray-600 font-semibold m-4 rounded">
+                        See Demo
+                      </button>
+                    </Link>
                   </div>
-                  <p className="w-80 md:96 lg:w-[500px] lg:text-lg xl:2-[600px]">
-                    {item.description}
-                  </p>
-                  <Link href={item.link} className="flex justify-end">
-                    <button className="p-2 text-sm md:p-4 md:text-md lg:p-8 lg:text-lg bg-white text-gray-600 font-semibold m-4 rounded">
-                      See Demo
-                    </button>
-                  </Link>
                 </div>
-              </div>
-            ))}
+              ))}
           </motion.div>
         </div>
       </div>
-      <div className="w-screen h-screen flex flex-col gap-16 items-center justify-center text-center">
+      {/* <div className="w-screen h-screen flex flex-col gap-16 items-center justify-center text-center bg-custom-bg">
         <h1 className="text-8xl">Do you have a project?</h1>
         <div className="relative">
           <motion.svg
@@ -104,7 +106,8 @@ const PortfolioPage = () => {
             Hire Me
           </Link>
         </div>
-      </div>
+      </div> */}
+      <Carousel />
     </motion.div>
   );
 };

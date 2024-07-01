@@ -2,19 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 
 const NavLink = ({ link }) => {
   const pathName = usePathname();
 
   return (
-    <Link
-      className={`rounded p-1 ${
-        pathName === link.url && "bg-black text-white"
+    <motion.div
+      whileTap={{ scale: 0.9 }}
+      transition={{ duration: 0.2 }}
+      className={`rounded px-2 font-extralight ${
+        pathName === link.url && "bg-white text-black"
+      } ${
+        pathName !== link.url && "hover:bg-hover transition-all duration-200"
       }`}
-      href={link.url}
     >
-      {link.title}
-    </Link>
+      <Link href={link.url}>{link.title}</Link>
+    </motion.div>
   );
 };
 

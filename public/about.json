@@ -1,0 +1,48 @@
+{
+  "biography": "Psychologist-turned-developer with a passion for machine learning and web development. Leverages an understanding of human behavior to craft intuitive and engaging software solutions using diverse programming languages and frameworks.",
+  "skills": [
+    "JavaScript",
+    "TypeScript",
+    "Python",
+    "Java",
+    "C/C++",
+    "C#",
+    "HTML",
+    "CSS",
+    "SQL",
+    "React",
+    "Angular",
+    "Flask",
+    "Gradio",
+    "Next.js",
+    "Node.js",
+    "Tailwind CSS",
+    "Spring Boot",
+    "MongoDB",
+    "Figma",
+    "Adobe XD"
+  ],
+  "experiences": [
+    {
+      "title": "Software Engineering Intern",
+      "company": "National Science Foundation",
+      "description": "Developed an interactive Gradio-based web application that enables users to annotate important areas on image data, enhancing the explainability and accuracy of DNNs using robust explanation supervision techniques like RES.",
+      "date": "2024 - Present",
+      "logo": "logo-nsf.png"
+    },
+    {
+      "title": "Software Engineering Intern",
+      "company": "eStreamly",
+      "description": "Enhanced user interface accessibility and cross-browser compatibility to deliver an intuitive and seamless online shopping experience.",
+      "date": "2024 - Present",
+      "logo": "logo-estreamly.png"
+    },
+    {
+      "title": "Research Assistant",
+      "company": "Cognition and Visualization Lab",
+      "description": "Collaborated closely with Emory faculty to co-author a research paper on music streaming data visualization, submitted to CSCW 2024. Utilized Python and D3.js to create interactive visualizations that effectively illustrate Spotify user behaviors and preferences.",
+      "date": "2023 - Present",
+      "logo": "logo-emory.png"
+    }
+  ]
+}
